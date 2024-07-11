@@ -1,5 +1,6 @@
 <?php
     include('conection.php');
+    include('function.php');
     //var_dump($_FILES['arquivo']);
 
     if(isset($_FILES['arquivo'])){
@@ -32,6 +33,7 @@
             echo'deu ruim patrão';
         }
     }
+    $sql_query = $conection->query("SELECT * FROM imagem") or die($conection->error);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,5 +50,26 @@
         </p>
         <button type="submit">Enviar arquivos</button>
     </form>
+    <h1>Lista dos Arquivos</h1>
+    <table border="1" cellpadding="10">
+        <theaad>
+            <th>Preview</th>
+            <th>Arquivo</th>
+            <th>Data de Envio</th>
+        </theaad>
+        <tbody>
+            <?php
+                 while($arquivo = $sql_query->fetch_assoc()){
+            ?>
+            <tr>
+                <td><img src="<?php echo $arquivo['path'];?>" height="50px" alt=""></td>
+                <td><a target="_blank" href="<?php echo $arquivo['path'];?>"><?php echo $arquivo['path'];?></a></td>
+                <td> <?php echo date("d/m/Y H:i", strtotime($arquivo['data_upload'])); ?></td>
+            </tr>
+             <?php    
+                 }
+              ?>
+        </tbody>
+    </table>
 </body>
 </html>
