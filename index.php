@@ -16,16 +16,19 @@
         $nomeArquivo = $arquivo['name'];
         $novoNomeArquivo = uniqid();
         $extensao = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
-        echo 'arquivo enviado';
+
+        
 
         if($extensao != "jpg" && $extensao != 'png')
             die("Tipo de arquivo invalido");
 
-        $deu_certo = move_uploaded_file($arquivo['tmp_name'], $pasta . $novoNomeArquivo . "." . $extensao);
+        $path =  $pasta . $novoNomeArquivo . "." . $extensao;
+        $deu_certo = move_uploaded_file($arquivo['tmp_name'], $path);
 
-        if($deu_certo)
-            echo"<p>Deu certo, acesse ele <a target=\"_blank\" href='files/$novoNomeArquivo.$extensao'>aqui</a></p>";
-        else{
+        if($deu_certo){
+           $conection->query("INSERT INTO imagem(nome, path) VALUES('$novoNomeArquivo', '$path')");
+           echo '<p>Arquivo enviado com sucesso</p>';
+        }else{
             echo'deu ruim patrão';
         }
     }
